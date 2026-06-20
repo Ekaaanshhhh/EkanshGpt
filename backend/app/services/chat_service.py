@@ -22,7 +22,7 @@ try:
         SYSTEM_PROMPT = f.read()
 except FileNotFoundError:
     logger.error(f"Could not find system prompt at {PROMPT_PATH}")
-    SYSTEM_PROMPT = "You are Little E., the portfolio assistant for Ekansh. Answer questions based on the context."
+    SYSTEM_PROMPT = "You are Eko, the portfolio assistant for Ekansh. Answer questions based on the context."
 
 def generate_chat_response(question: str) -> Tuple[str, List[str]]:
     """
