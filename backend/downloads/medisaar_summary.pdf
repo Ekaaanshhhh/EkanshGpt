@@ -1,0 +1,106 @@
+# MediSaar Project Summary
+*Editorial healthcare. Clinical intelligence with empathy.*
+
+> **Product Vision**: Apple Health's calm + Notion's structure + Linear's craft + a New Yorker article's typography. 
+> MediSaar transforms fragmented, unreadable healthcare records into a coherent, interactive timeline using a highly clinical AI intelligence layer.
+
+---
+
+## 1. Executive Summary
+**MediSaar** is a clinical intelligence platform designed to unify scattered patient health records (prescriptions, lab reports, discharge summaries) into a single, cohesive patient history. It uses advanced Optical Character Recognition (OCR) and an AI-driven Retrieval-Augmented Generation (RAG) architecture to synthesize years of data into a 60-second read for doctors. 
+
+Its key differentiators are its **strict editorial design system** (rejecting standard sterile enterprise ERP looks for warm, calm typography) and its **transparent AI**, which explicitly tags generated artifacts while keeping the patient humanized.
+
+---
+
+## 2. Core Architecture
+
+The system is split into two primary components: a modern frontend web application and a dedicated backend AI microservice for heavy clinical data processing.
+
+```mermaid
+graph TD
+    subgraph "Web Application (Next.js)"
+        UI[Frontend UI - React/Tailwind]
+        API[Next.js API Routes]
+        DB[(MongoDB)]
+        UI -->|Next.js Auth & Actions| API
+        API -->|CRUD & Metadata| DB
+    end
+
+    subgraph "AI Engine (FastAPI)"
+        OCR[OCR Processing]
+        RAG[RAG & Embeddings]
+        LLM[LLM Generation]
+        VDB[(ChromaDB)]
+        PG[(PostgreSQL)]
+        
+        OCR --> RAG
+        RAG --> LLM
+        RAG <--> VDB
+        OCR --> PG
+    end
+
+    API <-->|Document & Prompts| OCR
+```
+
+---
+
+## 3. Technology Stack
+
+### 🧑‍💻 Frontend & API (Web App)
+- **Framework:** Next.js 16.2.9 (App Router)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS v4, Radix UI primitives (Shadcn UI overrides)
+- **Database:** MongoDB (via Mongoose)
+- **State/Auth:** React Hooks, `jsonwebtoken`, `bcryptjs`
+- **File Storage:** Cloudinary
+
+### 🧠 AI Intelligence Layer (FastAPI Service)
+- **Framework:** FastAPI (Python)
+- **OCR Engine:** PaddleOCR, EasyOCR, PDF2Image
+- **Embeddings:** Sentence-Transformers
+- **LLM Engine:** Groq API (High-speed inference)
+- **Vector Database:** ChromaDB
+- **Relational DB:** PostgreSQL (via SQLAlchemy / Alembic)
+- **Workflow:** LangChain for complex prompt orchestration
+
+---
+
+## 4. Key Entities & Data Model
+
+MediSaar supports three distinct user roles, interlinked by fine-grained permissions and associations:
+
+| Role / Entity | Purpose & Capabilities |
+| --- | --- |
+| **Doctor Profile** | The primary users. Accesses patient timelines, requests patient associations, reviews AI summaries, and triggers "Emergency Mode". |
+| **Institution Profile** | Represents hospitals and clinics. Can invite doctors to the institution, and manage organizational metrics and reception workflows. |
+| **Individual Profile** | The patient. Manages their own health record, grants/revokes access to doctors and institutions (`PatientAssociationRequest`), and views a jargon-free timeline of their health. |
+| **Health Records** | `Visit`, `Diagnosis`, `Prescription`, `Report` are primary data artifacts representing specific points in time. |
+| **AI Summary** | Automatically generated `AISummary` documents that synthesize patient history. Always marked with an amber "AI" tag for clinical transparency. |
+
+---
+
+## 5. Core Workflows & Intelligence
+
+1. **Document Upload & OCR:** Receptionists or patients upload mixed documents. The Python engine applies PaddleOCR to extract raw text, determining if a document is a prescription, lab report, or discharge summary.
+2. **Medical Extraction & Embeddings:** The `medical_extraction` module processes the raw text. Clinical entities are stored in ChromaDB (Vector DB) for semantic search via the `sentence-transformers` models.
+3. **Timeline Generation:** Events are sorted chronologically. The system translates disjointed hospital records into a coherent narrative of the patient's journey.
+4. **RAG & Summary (The 60-Second Read):** When a doctor accesses a patient file, the LLM queries ChromaDB to generate an up-to-date, real-time AI summary, highlighting active medications and chronic conditions.
+5. **Emergency Mode:** A critical, 1-click feature for doctors that takes over the screen to display only life-saving context (Allergies, Active Medications, Chronic Conditions) in a high-contrast amber theme.
+
+---
+
+## 6. Design System & User Experience
+
+MediSaar strictly adheres to an "editorial" design philosophy, governed by `DESIGN.md`.
+
+- **Typography & Rhythm:** Uses *Fraunces* for headings and large numbers, paired with *Inter* for readable, dense clinical text. No heavy, crowded dashboards.
+- **Color Palette (Calm & Intentional):** 
+  - *Warm Neutrals* (`--bg-canvas`: `#FBF7F0`)
+  - *Sage Greens* (`--sage-600`) as the primary brand and action color. 
+  - *Amber Accent* (`--amber-500`) reserved **exclusively** for marking AI-generated content or Emergency States.
+- **Micro-interactions:** Linear-grade restraint. No bouncy animations. Loading states use a calm amber line shimmer across a card instead of generic spinners.
+- **Accessibility & Reality:** Designed mobile-first because doctors rely heavily on their phones during rounds.
+
+## Conclusion
+MediSaar is built to restore the human connection in medical consultations by ensuring the doctor spends their 60 seconds reading a coherent narrative, rather than digging through physical files. It is an engineering and design effort that prioritizes patient trust, system transparency, and clinical efficiency.

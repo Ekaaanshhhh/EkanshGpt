@@ -1,0 +1,74 @@
++91-8542951940 _|_ ekanshsatsangi@gmail.com _|_ LinkedIn _|_ GitHub _|_ Portfolio 
+
+## Ekansh Satsangi 
+
+## **Education** 
+
+**National Institute of Technology, Patna Sep. 2024 – Jul. 2028** _B.Tech, Electronics and Communication Engineering | CGPA:_ _**8.56/10** Patna, Bihar, India_ **Mercy Memorial School, UP (ISC / ICSE) 2021 – 2023** _Class 12:_ _**93.5%** | Class 10:_ _**97.4%** Uttar Pradesh, India_ 
+
+## **Technical Skills** 
+
+**Languages** : Java, JavaScript, Python, C 
+
+**Core CS** : Data Structures & Algorithms, Object-Oriented Programming, Database Management Systems, Operating Systems **Frontend** : React.js, Next.js, Tailwind CSS 
+
+**Backend** : Node.js, Express.js 
+
+**Databases** : MongoDB, Firebase Firestore, MySQL **Cloud & DevOps** : Docker, Google Cloud Run, Vercel **Security** : JWT, OAuth 2.0, RBAC, AES-256 Encryption 
+
+**Tools** : Git, GitHub, Postman 
+
+## **Projects** 
+
+**ReelOps** _|_ AI-Powered Multi-Tenant Publishing Platform _React, Node.js, MongoDB, Socket.IO, Docker, GCP | Live Link | GitHub_ 
+
+**Feb. 2026** 
+
+- Architected a **production-grade, multi-tenant SaaS platform** integrating **Groq LLaMA** , the **YouTube Data API** , and Cloudinary into one **event-driven publishing pipeline** , collapsing an **8-step manual workflow into 1 automated action** and cutting operational effort by **˜80%** . 
+
+- Designed a **distributed scheduler** with database-level locking and stale-lock recovery to guarantee **exactly-once execution** of scheduled publishes across horizontally scaled instances, eliminating race conditions and duplicate uploads under concurrent load. 
+
+- Built a **real-time collaboration layer** using **Socket.IO** over **JWT-authenticated** WebSocket connections, achieving **sub-200ms message delivery** for synchronized team editing across isolated workspace channels. 
+
+- Implemented **channel-scoped RBAC** for independent per-tenant roles, **OAuth 2.0** for secure account linking, and **AES-256 encryption** of stored credentials, deploying the containerized service to **Google Cloud Run** with reproducible **Docker** builds. 
+
+**MediSaar** _|_ AI Healthcare Intelligence Platform 
+
+**2025** 
+
+_Next.js, React 19, TypeScript, MongoDB, ChromaDB, Gemini | Live Link | GitHub_ 
+
+- Architected a full-stack **healthcare intelligence system** across **3 user domains** (Patient, Doctor, Institution) with a **RAG** pipeline – OCR extraction, **vector embeddings** in **ChromaDB** , **Gemini** -based synthesis – generating clinical summaries in **under 60 seconds** and cutting manual record review by **˜85%** . 
+
+- Engineered **JWT-based RBAC middleware** at the routing layer to isolate and secure data across multiple role-specific portals, preventing cross-role data leakage while centralizing authentication logic for the entire application. 
+
+- Mitigated **RAG hallucination risk** in a high-stakes domain by designing a “trust-by-transparency” architecture: every AI-generated claim is source-linked to its origin document, and OCR outputs below an **80% confidence threshold** are auto-flagged for human verification. 
+
+- Diagnosed a **production build failure** (Turbopack AST compilation error) blocking CI/CD and refactored database/secret resolution from build-time to **runtime** , enabling one **Docker** image to deploy across multiple environments. 
+
+## **Civix** _|_ Real-Time Civic Issue Reporting Platform 
+
+**Jan. 2026** 
+
+_React, Firebase, Firestore, RBAC | Live Link_ 
+
+- Built a full-stack civic issue reporting platform on **Firebase** and **Firestore** with **real-time data synchronization** , enabling citizens to submit, track, and resolve infrastructure issues through a complete lifecycle (open _→_ in-progress _→_ resolved). 
+
+- Implemented an **RBAC-secured admin workflow** for moderation and status transitions with optimistic UI updates; deployed the app and **ranked in the Top 10** at the **GDG NIT Patna TechSprint Hackathon** . 
+
+## **Experience** 
+
+**HackSlash – Web Development Team May 2025 – Present** _Web Developer NIT Patna •_ Developed and deployed **production web applications** for college-wide hackathons; maintained version-controlled, modular codebases and debugged performance bottlenecks under tight delivery timelines. **National Service Scheme (NSS) – Sankalp Jan. 2025 – Present** _Volunteer Teacher NIT Patna_ 
+
+- Mentored underprivileged students in foundational subjects, adapting instructional strategies to diverse learning needs and strengthening communication and leadership skills. 
+
+## **Achievements & Certifications** 
+
+Advanced to **Stage 2** of the **AlgoUniversity Technology Fellowship (ATF 2025)** , ranking in the **top 8% nationwide** on competitive programming and software engineering aptitude. 
+
+Solved **300+ DSA problems** across LeetCode, CodeChef, and GeeksforGeeks, achieving a **CodeChef 2-star rating** while strengthening proficiency in arrays, graphs, and dynamic programming. 
+
+Earned **20+ Google Cloud Skill Badges** via Google Cloud Study Jams, covering cloud computing, scalable infrastructure, and AI/ML services on GCP. 
+
+Completed the **Commonwealth Bank Software Engineering Job Simulation** , applying software design, debugging, and agile 
+

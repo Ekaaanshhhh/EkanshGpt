@@ -1,0 +1,100 @@
+# ReelOps: Complete Project Summary
+
+## 1. Overview
+**ReelOps** is an enterprise-grade, AI-powered content publishing platform built for modern creators. It is designed to automate the tedious processes of uploading, scheduling, and managing social media video content across multiple channels. The application represents a robust, end-to-end SaaS architecture with a highly responsive frontend, a resilient background processing backend, and a cloud-native deployment pipeline.
+
+---
+
+## 2. Key Features
+- **Multi-Channel Collaboration:** Team members can work together across various channels.
+- **Role-Based Access Control:** Secure permissions management for teams.
+- **AI Metadata Generation:** Automatically creates SEO-optimized titles, descriptions, and tags.
+- **Automation Scheduling:** Plan video publishes down to the minute.
+- **YouTube Integration:** Direct OAuth 2.0 integration and automated publishing via YouTube Data API.
+- **Real-Time Execution Logs:** Live status updates for automations and uploads.
+- **In-App Channel Chat:** Communication tools for collaborators.
+- **Resilient Scheduler:** Atomic locking and recovery mechanisms for guaranteed uploads.
+
+---
+
+## 3. Technical Architecture
+
+### The Frontend
+The client side focuses on speed, real-time responsiveness, and a premium aesthetic.
+- **Core Framework:** React 18 powered by Vite for fast HMR and optimized building.
+- **Styling:** Tailwind CSS using "Glassmorphism" design, deep dark modes, and micro-animations for an engaging UX.
+- **State Management:** React Context API (e.g., `ProfileContext`, `AuthContext`) for global state.
+- **Real-Time Engine:** Socket.IO Client to receive live execution logs and status updates from the backend.
+- **Networking:** Axios, configured with HTTP-only cookie support (`withCredentials: true`) for secure backend communication.
+
+### The Backend
+The server is a highly modular, production-ready system built to handle complex asynchronous workflows.
+- **Core Stack:** Node.js with Express.js, decoupled into controllers, services, routes, and models.
+- **Database:** MongoDB (via Mongoose) acts as the central source of truth.
+- **Authentication:** Custom JWT-based system storing tokens in `Secure`, `HttpOnly` cookies to prevent XSS attacks.
+- **Real-Time Server:** Socket.IO Server runs alongside Express to push live status updates to the client (e.g., "Uploading to YouTube...").
+
+---
+
+## 4. Core Engineering Pipelines
+
+### A. OAuth 2.0 Integration
+ReelOps integrates directly with Google to manage YouTube channels securely.
+- Uses the `googleapis` SDK for secure OAuth 2.0 flows with offline access to retrieve Refresh Tokens.
+- Refresh tokens are **encrypted via an AES encryption utility** before being stored in MongoDB, ensuring credential security even during a database breach.
+
+### B. Media Upload & Storage
+A dedicated pipeline prevents server crashes when handling heavy video files.
+- **Ingestion:** Uses `multer` to intercept videos and buffer them temporarily to local disk.
+- **Cloud Storage:** Streams buffered files to **Cloudinary** using their API, generating secure, optimized playback URLs.
+- **Cleanup Sweep:** Automatically deletes the local buffer using `fs.unlinkSync` post-upload to prevent memory leaks and disk exhaustion.
+
+### C. AI Content Generation
+- Integrates the **Groq AI API** (using lightning-fast LLaMA models) to automatically generate highly engaging, SEO-optimized titles, descriptions, and tags based on video topics.
+
+### D. Background Automation Scheduler (The Engine)
+The most complex part of ReelOps is its robust scheduling engine:
+- **Tick Engine:** Uses `node-cron` to check the database every minute for scheduled videos.
+- **Atomic Locking:** Implements a `findAndModify` locking mechanism using a unique `WORKER_ID`. This guarantees that in a scaled environment, two servers will never upload the same video twice.
+- **Self-Healing:** A `recoverStaleLocks` mechanism automatically unfreezes uploads that crashed mid-process.
+- **The Executor:** When a video executes, the server fetches it from Cloudinary, decrypts the Google Refresh Token to obtain a fresh Access Token, and publishes it via the YouTube Data API v3.
+
+---
+
+## 5. Production Hardening & Security
+ReelOps includes several layers of production security:
+- **Helmet:** Secures the Express app by setting various HTTP headers (e.g., XSS filters, frameguards).
+- **Express Rate Limit:** Throttles incoming IPs to prevent DDoS and brute-force attacks.
+- **Mongo Sanitize:** Prevents NoSQL injection attacks by stripping prohibited characters.
+- **Trust Proxy:** Configured to handle IPs securely when deployed behind cloud load balancers.
+
+---
+
+## 6. Deployment & Cloud Infrastructure
+ReelOps uses a modern, serverless DevOps architecture.
+- **Frontend (Vercel):** Deployed to Vercel's Edge Network for global CDN distribution and automatic CI/CD on every GitHub push.
+- **Containerization:** The backend uses a **Multi-Stage Dockerfile** on Alpine Linux. This builds dependencies, then strips heavy tools to create a tiny, secure production image running as a non-root user.
+- **Backend (Google Cloud Run):**
+  - Deployed as a serverless container.
+  - CI/CD via **Google Cloud Build** directly from GitHub.
+  - Configured with instance-based CPU allocation and Minimum Instances = 1 (to keep the background scheduler active).
+  - A dedicated `/api/v1/health` endpoint allows Google Cloud to monitor its heartbeat and reboot it if it fails.
+
+---
+
+## 7. Local Setup Instructions
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+### Backend
+```bash
+cd backend
+npm install
+npm run dev
+```
+*Note: Ensure environment variables are configured correctly by referencing `.env.example` in both the `frontend/` and `backend/` directories.*

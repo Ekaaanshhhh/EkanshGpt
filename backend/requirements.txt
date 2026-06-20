@@ -1,0 +1,29 @@
+# EkanshGPT Backend Dependencies
+# ================================
+
+# Web Framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+
+# File uploads (required by FastAPI for UploadFile)
+python-multipart==0.0.12
+
+# Configuration
+python-dotenv==1.0.1
+pydantic-settings==2.5.2
+
+# Vector Database (ChromaDB Cloud)
+chromadb==1.5.9
+
+# Embeddings via HuggingFace Inference API (cloud)
+# ─ Uses huggingface_hub directly (already a chromadb dependency)
+# ─ No torch/sentence-transformers/langchain needed
+# ─ BAAI/bge-small-en-v1.5 runs on HuggingFace servers
+huggingface_hub>=0.23.0
+
+# Document Parsing
+PyMuPDF==1.24.11
+markdown==3.7
+
+# Logging
+loguru==0.7.2
