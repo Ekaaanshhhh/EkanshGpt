@@ -2,18 +2,15 @@ import os
 import time
 from typing import Tuple, List
 
-from huggingface_hub import InferenceClient
-from huggingface_hub.errors import HfHubHTTPError
+from groq import Groq
+from groq import APIError
 
 from app.config import settings
 from app.services.vector_store import get_collection, generate_embeddings
 from app.utils.logger import logger
 
-# Initialize the HuggingFace Inference Client globally
-llm_client = InferenceClient(
-    "meta-llama/Llama-3.3-70B-Instruct", 
-    token=settings.HUGGINGFACEHUB_API_TOKEN
-)
+# Initialize the Groq Client globally
+llm_client = Groq(api_key=settings.GROQ_API_KEY)
 
 # Load the system prompt once on startup
 PROMPT_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "prompts", "assistant_prompt.md")
@@ -29,7 +26,7 @@ def generate_chat_response(question: str) -> Tuple[str, List[str]]:
     End-to-end RAG pipeline:
     1. Embeds question.
     2. Retrieves top 3 chunks.
-    3. Sends to Llama 3.3 70B via HF API (with retry logic).
+    3. Sends to Llama 3.3 70B via Groq API (with retry logic).
     4. Returns (answer_text, unique_sources).
     """
     logger.info(f"Generating chat response for question: {question}")
@@ -81,8 +78,9 @@ def generate_chat_response(question: str) -> Tuple[str, List[str]]:
     max_retries = 3
     for attempt in range(max_retries):
         try:
-            logger.debug(f"Calling HuggingFace LLM API (Attempt {attempt + 1})...")
-            response = llm_client.chat_completion(
+            logger.debug(f"Calling Groq LLM API (Attempt {attempt + 1})...")
+            response = llm_client.chat.completions.create(
+                model="llama-3.3-70b-versatile",
                 messages=messages, 
                 max_tokens=500, 
                 temperature=0.1
@@ -91,13 +89,13 @@ def generate_chat_response(question: str) -> Tuple[str, List[str]]:
             logger.info("Successfully generated LLM answer.")
             return answer, unique_sources
             
-        except HfHubHTTPError as e:
-            if e.response.status_code == 429:
+        except APIError as e:
+            if getattr(e, 'status_code', None) == 429:
                 wait_time = (attempt + 1) * 2  # 2s, 4s, 6s
-                logger.warning(f"Rate limited by HuggingFace API (429). Retrying in {wait_time}s...")
+                logger.warning(f"Rate limited by Groq API (429). Retrying in {wait_time}s...")
                 time.sleep(wait_time)
             else:
-                logger.error(f"HuggingFace API error: {e}")
+                logger.error(f"Groq API error: {e}")
                 raise ValueError("Failed to generate response from the AI model.")
         except Exception as e:
             logger.error(f"Unexpected error calling LLM: {e}")

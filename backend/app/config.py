@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     # ── HuggingFace ────────────────────────────────────────
     # Token for HuggingFace API (used for chat model in future)
     HUGGINGFACEHUB_API_TOKEN: str
+    
+    # ── Groq ───────────────────────────────────────────────
+    GROQ_API_KEY: str
 
     # ── Embedding Model ────────────────────────────────────
     # BAAI/bge-small-en-v1.5 runs locally — free, no API calls
